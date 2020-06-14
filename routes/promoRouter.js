@@ -54,9 +54,16 @@ promoRouter.route('/:promoId')
 .get((req,res,next) => {
     Promotions.findById(req.params.promoId)
     .then((promotion) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(promotion);
+        if(promotion != null) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(promotion);
+        }
+        else {
+            err = new Error('Promotion ' + req.params.promoId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
     }, (err) => next(err))
     .catch((err) => next(err));
 })
@@ -69,18 +76,32 @@ promoRouter.route('/:promoId')
         $set: req.body
     }, { new: true })
     .then((promotion) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(promotion);
+        if(promotion != null) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(promotion);
+        }
+        else {
+            err = new Error('Promotion ' + req.params.promoId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
     }, (err) => next(err))
     .catch((err) => next(err));
 })
 .delete((req, res, next) => {
     Promotions.findByIdAndRemove(req.params.promoId)
     .then((resp) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(resp);
+        if(resp != null) {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(resp);
+        }
+        else {
+            err = new Error('Promotion ' + req.params.promoId + ' not found');
+            err.status = 404;
+            return next(err);
+        }
     }, (err) => next(err))
     .catch((err) => next(err));
 });
